@@ -167,7 +167,7 @@ class FamiliaIntegrationTest {
         updateDto.setNombre("Familia Actualizada");
         updateDto.setDescripcion("Descripcion modificada");
         updateDto.setNombreLugar("Lugar Test");
-
+        // 3️⃣ UPDATE
 
         String updateJson = objectMapper.writeValueAsString(updateDto);
         MockMultipartFile updatePart = new MockMultipartFile(
