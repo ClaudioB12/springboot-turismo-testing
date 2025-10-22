@@ -37,7 +37,6 @@ public class SecurityConfig {
                                 .requestMatchers("/admin/**").hasRole("ADMIN")
                                 .requestMatchers("/usuario/**").hasRole("USUARIO")
                                 .requestMatchers("/emprendedor/**").hasRole("EMPRENDEDOR")
-                                .requestMatchers("/github-webhook").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
