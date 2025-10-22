@@ -126,6 +126,18 @@ class FamiliaIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].nombre", containsString("Busqueda")));
     }
+    @Test
+    @Order(5)
+    @WithMockUser(roles = "ADMIN")
+    @DisplayName("Integracion: Debe manejar búsqueda sin resultados")
+    void testBusquedaSinResultados() throws Exception {
+        mockMvc.perform(get("/admin/familia/buscar")
+                        .param("nombre", "NoExisteEstaFamilia12345")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)));
+    }
 
 
     @Test
@@ -205,17 +217,4 @@ class FamiliaIntegrationTest {
                 .andExpect(status().isOk());
     }
 
-
-    @Test
-    @Order(5)
-    @WithMockUser(roles = "ADMIN")
-    @DisplayName("Integracion: Debe manejar búsqueda sin resultados")
-    void testBusquedaSinResultados() throws Exception {
-        mockMvc.perform(get("/admin/familia/buscar")
-                        .param("nombre", "NoExisteEstaFamilia12345")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(0)));
-    }
 }
