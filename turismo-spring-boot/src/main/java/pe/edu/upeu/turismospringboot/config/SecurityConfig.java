@@ -23,7 +23,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(csrf -> csrf.disable())
+                .csrf(csrf -> csrf.disable()) // Deshabilitar CSRF para que GitHub pueda hacer POST
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authRequest ->
                         authRequest
@@ -31,7 +31,8 @@ public class SecurityConfig {
                                         "/auth/**", "/doc/**", "/v3/api-docs/**",
                                         "/swagger-ui/**", "/swagger-ui.html", "/swagger-resources/**",
                                         "/webjars/**", "/filePerfil/**", "/general/**",
-                                        "/ws-chat/**", "/ws-chat", "/topic/**", "/queue/**", "/app/**", "/user/**"
+                                        "/ws-chat/**", "/ws-chat", "/topic/**", "/queue/**", "/app/**", "/user/**",
+                                        "/github-webhook" // ✅ Excepción para GitHub Webhook
                                 ).permitAll()
                                 .requestMatchers("/admin/**").hasRole("ADMIN")
                                 .requestMatchers("/usuario/**").hasRole("USUARIO")
@@ -43,7 +44,7 @@ public class SecurityConfig {
                 .authenticationProvider(authProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .httpBasic(httpBasic -> httpBasic.disable())
-                .headers(headers -> headers.disable()) // ✅ Desactiva todos los headers de protección (incluye frameOptions)
+                .headers(headers -> headers.disable())
                 .build();
     }
 }
