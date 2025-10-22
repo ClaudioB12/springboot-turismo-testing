@@ -15,6 +15,8 @@ import pe.edu.upeu.turismospringboot.model.dto.CategoriaDto;
 import pe.edu.upeu.turismospringboot.model.entity.Categoria;
 import pe.edu.upeu.turismospringboot.repository.CategoriaRepository;
 
+import java.nio.charset.StandardCharsets;
+
 import static org.hamcrest.Matchers.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -53,16 +55,14 @@ class CategoriaIntegrationTest {
     @DisplayName("Integración: Debe crear una categoría completa")
     @Transactional
     void testCrearCategoria_Completo() throws Exception {
-        // Arrange
         String categoriaJson = objectMapper.writeValueAsString(categoriaDto);
         MockMultipartFile categoriaPart = new MockMultipartFile(
                 "categoria",
                 "",
                 "application/json",
-                categoriaJson.getBytes()
+                categoriaJson.getBytes(StandardCharsets.UTF_8) // ← UTF-8
         );
 
-        // Act & Assert
         mockMvc.perform(multipart("/admin/categoria")
                         .file(categoriaPart)
                         .with(csrf()))
@@ -79,7 +79,6 @@ class CategoriaIntegrationTest {
     @WithMockUser(roles = "ADMIN")
     @DisplayName("Integración: Debe obtener todas las categorías")
     void testObtenerTodasLasCategorias() throws Exception {
-        // Act & Assert
         mockMvc.perform(get("/admin/categoria")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -93,13 +92,11 @@ class CategoriaIntegrationTest {
     @WithMockUser(roles = "ADMIN")
     @DisplayName("Integración: Debe buscar categoría por nombre")
     void testBuscarCategoriaPorNombre() throws Exception {
-        // Arrange - Crear una categoría primero
         Categoria categoria = new Categoria();
         categoria.setNombre("Categoría Búsqueda");
         categoria.setDescripcion("Para prueba de búsqueda");
         categoriaRepository.save(categoria);
 
-        // Act & Assert
         mockMvc.perform(get("/admin/categoria/buscar")
                         .param("nombre", "Búsqueda")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -121,7 +118,7 @@ class CategoriaIntegrationTest {
                 "categoria",
                 "",
                 "application/json",
-                categoriaJson.getBytes()
+                categoriaJson.getBytes(StandardCharsets.UTF_8) // ← UTF-8
         );
 
         String responseCreate = mockMvc.perform(multipart("/admin/categoria")
@@ -152,7 +149,7 @@ class CategoriaIntegrationTest {
                 "categoria",
                 "",
                 "application/json",
-                updateJson.getBytes()
+                updateJson.getBytes(StandardCharsets.UTF_8) // ← UTF-8
         );
 
         mockMvc.perform(multipart("/admin/categoria/" + id)
@@ -170,9 +167,6 @@ class CategoriaIntegrationTest {
         mockMvc.perform(delete("/admin/categoria/" + id)
                         .with(csrf()))
                 .andExpect(status().isOk());
-
-        // Verificar que fue eliminada
-
     }
 
     @Test
