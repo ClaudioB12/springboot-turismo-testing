@@ -17,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReservaController {
 
-    private final ReservaService reservaService;
+    private ReservaService reservaService;
 
     @PostMapping
     public ResponseEntity<ReservaResponseDTO> crearReserva(

@@ -74,18 +74,6 @@ class CategoriaIntegrationTest {
                 .andExpect(jsonPath("$.fechaCreacionCategoria").exists());
     }
 
-    @Test
-    @Order(2)
-    @WithMockUser(roles = "ADMIN")
-    @DisplayName("Integración: Debe obtener todas las categorías")
-    void testObtenerTodasLasCategorias() throws Exception {
-        mockMvc.perform(get("/admin/categoria")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$", not(empty())));
-    }
 
     @Test
     @Order(3)

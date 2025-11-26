@@ -18,7 +18,7 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    private static final String SECRET_KEY="586E3272357538782F413F4428472B4B6250655368566B597033733676397924";
+    private static final String SECRET_KEY = "586E3272357538782F413F4428472B4B6250655368566B597033733676397924";
 
     public String getToken(UserDetails user) {
         Map<String, Object> extraClaims = new HashMap<>();
@@ -31,7 +31,7 @@ public class JwtService {
 
         extraClaims.put("role", role);
 
-        if(user instanceof Usuario){
+        if (user instanceof Usuario) {
             Usuario usuario = (Usuario) user;
             extraClaims.put("idUsuario", usuario.getIdUsuario());
         }
@@ -39,19 +39,19 @@ public class JwtService {
         return getToken(extraClaims, user);
     }
 
-    private String getToken(Map<String,Object> extraClaims, UserDetails user) {
+    protected String getToken(Map<String, Object> extraClaims, UserDetails user) {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
                 .setSubject(user.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+1000L*60*60*24))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 24))
                 .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    private Key getKey() {
-        byte[] keyBytes=Decoders.BASE64.decode(SECRET_KEY);
+    protected Key getKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
@@ -60,8 +60,8 @@ public class JwtService {
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String username=getUsernameFromToken(token);
-        return (username.equals(userDetails.getUsername())&& !isTokenExpired(token));
+        final String username = getUsernameFromToken(token);
+        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
     public boolean isTokenValid(String token) {
@@ -72,9 +72,7 @@ public class JwtService {
         }
     }
 
-
-    private Claims getAllClaims(String token)
-    {
+    protected Claims getAllClaims(String token) {
         return Jwts
                 .parserBuilder()
                 .setSigningKey(getKey())
@@ -83,24 +81,20 @@ public class JwtService {
                 .getBody();
     }
 
-    public <T> T getClaim(String token, Function<Claims,T> claimsResolver)
-    {
-        final Claims claims=getAllClaims(token);
+    public <T> T getClaim(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = getAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
-    private Date getExpiration(String token)
-    {
+    protected Date getExpiration(String token) {
         return getClaim(token, Claims::getExpiration);
     }
 
-    private boolean isTokenExpired(String token)
-    {
+    protected boolean isTokenExpired(String token) {
         return getExpiration(token).before(new Date());
     }
 
     public String getRoleFromToken(String token) {
-        // Extraer el claim "role" del token
         return getClaim(token, claims -> claims.get("role", String.class));
     }
 }

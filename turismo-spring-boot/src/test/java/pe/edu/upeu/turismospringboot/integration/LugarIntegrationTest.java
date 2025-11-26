@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Tests de Integración de Familia")
-class LugarIntegrationTest {
+class   LugarIntegrationTest {
 
 
     @Autowired

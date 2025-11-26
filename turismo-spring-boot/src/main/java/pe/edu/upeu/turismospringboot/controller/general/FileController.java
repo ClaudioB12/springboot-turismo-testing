@@ -21,7 +21,7 @@ import java.util.UUID;
 @RestController
 public class FileController {
 
-    private static final String UPLOAD_DIR = "upload/imagenes";
+    private static String UPLOAD_DIR = "upload/imagenes";
 
     @GetMapping("filePerfil/file/{fileName}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName) {

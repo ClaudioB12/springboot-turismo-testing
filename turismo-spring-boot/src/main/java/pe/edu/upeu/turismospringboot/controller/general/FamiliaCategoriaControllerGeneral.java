@@ -20,7 +20,6 @@ import java.util.List;
 public class FamiliaCategoriaControllerGeneral {
 
     private final FamiliaCategoriaService familiaCategoriaService;
-    private final FamiliaCategoriaServiceImpl familiaCategoriaServiceImpl;
 
     @GetMapping
     public ResponseEntity<List<FamiliaCategoriaDto>> listarRelaciones() {
@@ -42,7 +41,9 @@ public class FamiliaCategoriaControllerGeneral {
             @PathVariable Long idFamiliaCategoria,
             @RequestParam(required = false) String nombre) {
 
-        List<Emprendimiento> emprendimientos = familiaCategoriaService.getEmprendimientosPorFamiliaCategoria(idFamiliaCategoria, nombre);
+        List<Emprendimiento> emprendimientos =
+                familiaCategoriaService.getEmprendimientosPorFamiliaCategoria(idFamiliaCategoria, nombre);
+
         return ResponseEntity.ok(emprendimientos);
     }
 }
